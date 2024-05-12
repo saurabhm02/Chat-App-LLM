@@ -1,0 +1,414 @@
+{
+	"info": {
+		"_postman_id": "e2149545-8449-4698-80a9-0b595751b462",
+		"name": "HireQuotient-LLMChat",
+		"description": "Assignment: Backend for a Real-Time Chat Application\n\n  \nObjective:  \nDevelop a comprehensive backend for a real-time chat application using the MERN  \nstack, emphasizing the use of Node.js and MongoDB for server-side logic and  \ndatabase management. This assignment is designed to test your ability to manage  \nreal-time data exchange, database schema design, user authentication, and  \nserver-side logic, including integration with third-party APIs for language processing.\n\n  \nRequirements:\n\n  \n1\\. User Authentication:  \n● Implement a registration and login system.  \n● Users should sign up with an email and password.  \n● Use JWT (JSON Web Tokens) for managing authentication.\n\n  \n2\\. Chat Functionality:  \n● Users should be able to send and receive real-time messages.  \n● Utilise Socket.io for efficient real-time communication.\n\n  \n3\\. Message Storage:  \n● Store all messages in MongoDB.  \n● Ensure messages in chat are retrievable for conversation between people.\n\n  \n4\\. User Online Status and LLM Integration (IMPORTANT):  \n● A user can set their status as ‘AVAILABLE’ or ‘BUSY’  \n● Users can chat if they are online. If the recipient is ‘BUSY’, automatically  \ngenerate an appropriate response using a language model API such as  \nChatGPT, Claude, Gemini or any free API available. (In case any API is  \nnot available/accessible to you, use the function at the end of  \nassignment to mock the API response. Preferred to have an actual API  \nfunctioning).  \n● API Response from the LLM should be sent within 10 seconds. If the  \nLLM API does not respond in 10 seconds, send a standard message  \nindicating the user is unavailable. (IMPORTANEndFragment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33968775"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullName\":  \"{{$randomUserName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"password\": \"23456\",\r\n    \"confirmPassword\": \"23456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_AUTH}}/register",
+							"host": [
+								"{{BASE_LLM_AUTH}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "setstatus",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\" : \"AVAILABLE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_AUTH}}/setstatus",
+							"host": [
+								"{{BASE_LLM_AUTH}}"
+							],
+							"path": [
+								"setstatus"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"Cielo_Kemmer@yahoo.com\",\r\n    \"password\": \"23456\"\r\n}\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_AUTH}}/login",
+							"host": [
+								"{{BASE_LLM_AUTH}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Message",
+			"item": [
+				{
+					"name": "addMessage",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"chatId\": \"\",\r\n    \"senderId\": \"\",\r\n    \"text\" : \"hey buddy\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_MSG}}/",
+							"host": [
+								"{{BASE_LLM_MSG}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getMessage",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "sk-proj-3rfaQBo66SL7Hm2azXFyT3BlbkFJBkHJ41EvyBW4RiU03NbB",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "private-key",
+								"value": "c7fc3d43-a894-488c-8799-225647774fd8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_MSG}}/:chatId",
+							"host": [
+								"{{BASE_LLM_MSG}}"
+							],
+							"path": [
+								":chatId"
+							],
+							"variable": [
+								{
+									"key": "chatId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "createChat",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"senderId\": \"\",\r\n    \"receiverId\": \"\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_CHAT}}/",
+							"host": [
+								"{{BASE_LLM_CHAT}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userChats",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_LLM_CHAT}}/:userId",
+							"host": [
+								"{{BASE_LLM_CHAT}}"
+							],
+							"path": [
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findChat",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_LLM_CHAT}}/find/:firstId/:secondId",
+							"host": [
+								"{{BASE_LLM_CHAT}}"
+							],
+							"path": [
+								"find",
+								":firstId",
+								":secondId"
+							],
+							"variable": [
+								{
+									"key": "firstId",
+									"value": ""
+								},
+								{
+									"key": "secondId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "user-auth",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_LLM_USER}}/get-user/:userId",
+							"host": [
+								"{{BASE_LLM_USER}}"
+							],
+							"path": [
+								"get-user",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProfile",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_LLM_USER}}/update-profile/:id",
+							"host": [
+								"{{BASE_LLM_USER}}"
+							],
+							"path": [
+								"update-profile",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateProfillePic",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avatar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_LLM_USER}}/update-profile-photo/:id",
+							"host": [
+								"{{BASE_LLM_USER}}"
+							],
+							"path": [
+								"update-profile-photo",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserByEmail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_LLM_USER}}/get-user-email/:email",
+							"host": [
+								"{{BASE_LLM_USER}}"
+							],
+							"path": [
+								"get-user-email",
+								":email"
+							],
+							"variable": [
+								{
+									"key": "email",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "searchUser",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_LLM_USER}}/search-users/:query",
+							"host": [
+								"{{BASE_LLM_USER}}"
+							],
+							"path": [
+								"search-users",
+								":query"
+							],
+							"variable": [
+								{
+									"key": "query",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
