@@ -14,6 +14,6 @@ router.get("/logout", logout);
 
 // change status
 
-router.post("/setstatus", auth, setStatus);
+router.put("/setstatus", auth, setStatus);
 
 export default router;
